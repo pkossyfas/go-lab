@@ -89,3 +89,31 @@ func FindMissingElement2(a []int, b []int) []int {
 
 	return keepUniques(s)
 }
+
+// FindMissingElement3 returns a slice with the missing elements from
+// two different slices of ints
+func FindMissingElement3(a []int, b []int) []int {
+	sort.Ints(a)
+	sort.Ints(b)
+	a = removeDuplicates(a)
+	b = removeDuplicates(b)
+	s := []int{}
+	i := 0
+	j := 0
+	for i < len(a) && j < len(b) {
+		if a[i] == b[j] {
+			i++
+			j++
+		} else if a[i] > b[j] {
+			s = append(s, b[j])
+			j++
+		} else {
+			s = append(s, a[i])
+			i++
+		}
+	}
+	s = append(s, a[i:]...)
+	s = append(s, b[j:]...)
+	return s
+
+}
