@@ -1,10 +1,13 @@
+/*
+Package slicediff provides three different functions (FindMissingElements, FindMissingElements1, FindMissingElements2)
+that return the diff of two given slices (unique elements that missing from the one or the other).
+Functions take as input two slices of ints and return one slice of ints.
+*/
 package slicediff
 
-import (
-	"sort"
-)
+import "sort"
 
-// keepUniques removes duplicate values from a given slice of ints
+// keepUniques returns a slice with the unique items of a given sorted slice of ints
 func keepUniques(a []int) []int {
 	if len(a) == 0 || len(a) == 1 {
 		return a
@@ -26,7 +29,7 @@ func keepUniques(a []int) []int {
 	return temp
 }
 
-// removeDuplicates removes duplicate values from a given slice of ints
+// removeDuplicates removes duplicate values from a given sorted slice of ints
 func removeDuplicates(a []int) []int {
 	if len(a) == 0 || len(a) == 1 {
 		return a
@@ -62,9 +65,9 @@ func iterateSlices(a *[]int, b *[]int) []int {
 	return s
 }
 
-// FindMissingElement returns a slice with the missing elements from
-// two different slices of ints
-func FindMissingElement(a []int, b []int) []int {
+// FindMissingElements2 returns a slice with the elements that are not present on both given slices of ints
+// FindMissingElements2 has O(n*k) time complexity
+func FindMissingElements2(a []int, b []int) []int {
 	s := []int{}
 	// iterate slice a over slice b
 	s = iterateSlices(&a, &b)
@@ -76,13 +79,16 @@ func FindMissingElement(a []int, b []int) []int {
 	return s
 }
 
-// FindMissingElement2 returns a slice with the missing elements from
-// two different slices of ints
-func FindMissingElement2(a []int, b []int) []int {
+// FindMissingElements1 returns a slice with the elements that are not present on both given slices of ints
+// FindMissingElements1 has O(nlogn + klogk) time complexity
+func FindMissingElements1(a []int, b []int) []int {
+	// sort and remove duplicates values the two slices
 	sort.Ints(a)
 	sort.Ints(b)
 	a = removeDuplicates(a)
 	b = removeDuplicates(b)
+
+	// create a new slice by adding the two slices and return a slice with the unique values
 	s := []int{}
 	s = append(a, b...)
 	sort.Ints(s)
@@ -90,13 +96,16 @@ func FindMissingElement2(a []int, b []int) []int {
 	return keepUniques(s)
 }
 
-// FindMissingElement3 returns a slice with the missing elements from
-// two different slices of ints
-func FindMissingElement3(a []int, b []int) []int {
+// FindMissingElements returns a slice with the elements that are not present on both given slices of ints
+// FindMissingElements has O(nlogn + klogk) time complexity and it is consider the best solution
+func FindMissingElements(a []int, b []int) []int {
+	// sort the two given slices
 	sort.Ints(a)
 	sort.Ints(b)
+	// remove the duplicates
 	a = removeDuplicates(a)
 	b = removeDuplicates(b)
+
 	s := []int{}
 	i := 0
 	j := 0
@@ -114,6 +123,6 @@ func FindMissingElement3(a []int, b []int) []int {
 	}
 	s = append(s, a[i:]...)
 	s = append(s, b[j:]...)
-	return s
 
+	return s
 }
